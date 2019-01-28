@@ -56,12 +56,14 @@ int main(int argc, char const *argv[])
       undistort(img, u_img, K, D);    
     }
     
-    imshow(WINDOW_NAME1, display);
+    
     if(show_rect){
       display = u_img;
     } else{
       display = img;
     }
+
+    imshow(WINDOW_NAME1, display);
     
     switch(waitKey(30)) {
       case 27:

@@ -81,7 +81,9 @@ int main(int argc, char const *argv[])
 
       // escape
       case 27:
-        return 0;
+        if(!show_chessboard){
+          return 0;  
+        }        
         break;
 
 
