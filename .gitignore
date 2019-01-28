@@ -1,0 +1,19 @@
+# first ignore everything
+*
+
+# then don't ignore the root directory
+!*/
+
+# now whitelist the particular directories and all files within them
+!single_cam/*.cpp
+!stereo/*.cpp
+
+
+!single_cam/*.md
+!stereo/*.md
+
+!single_cam/*.yml
+!stereo/*.yml
+
+!single_cam/*.sh
+!stereo/*.sh

@@ -1,0 +1,11 @@
+%YAML:1.0
+---
+images:
+   - "test/1l.jpg"
+   - "test/1r.jpg"
+   - "test/2l.jpg"
+   - "test/2r.jpg"
+   - "test/3l.jpg"
+   - "test/3r.jpg"
+   - "test/4l.jpg"
+   - "test/4r.jpg"
