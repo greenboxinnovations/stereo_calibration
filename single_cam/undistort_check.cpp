@@ -39,12 +39,16 @@ int main(int argc, char const *argv[])
   fsc["ip"] >> ip;
   const string CAM_IP = ip;
   VideoCapture cap(CAM_IP);
+  cap.set(cv::CAP_PROP_BUFFERSIZE, 1);
 
 
   FileStorage fs(calib_file, FileStorage::READ);
   Mat K, D;
   fs["camera_matrix"] >> K;  
   fs["distortion_coefficients"] >> D;
+
+  // fs["M2"] >> K;  
+  // fs["D2"] >> D;
     
   Mat img, u_img, display;
   bool show_rect = true;

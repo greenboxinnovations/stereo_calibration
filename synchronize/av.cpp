@@ -24,7 +24,13 @@ int main(int argc, char** argv) {
     avformat_network_init();
 
     //open RTSP
-    if (avformat_open_input(&format_ctx, "rtsp://192.168.0.123:554/Streaming/Channels/1/?transportmode=unicast",
+    // if (avformat_open_input(&format_ctx, "rtsp://192.168.0.123:554/Streaming/Channels/1/?transportmode=unicast",
+    //         NULL, NULL) != 0) {
+    //     return EXIT_FAILURE;
+    // }
+
+
+    if (avformat_open_input(&format_ctx, "rtsp://192.168.0.141:8554/live0.264",
             NULL, NULL) != 0) {
         return EXIT_FAILURE;
     }
@@ -122,7 +128,7 @@ int main(int argc, char** argv) {
                 }
                 output_file.close();
 
-                std::cout << "AV LOG " << av_log()  <<  std::endl;
+                // std::cout << "AV LOG " << av_log()  <<  std::endl;
                 
             }
             cnt++;

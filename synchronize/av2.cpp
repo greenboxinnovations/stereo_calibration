@@ -16,11 +16,13 @@ extern "C" {
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
 #include <libavformat/avio.h>
-#include <libavformat/rtspcodes.h>
-#include <libavformat/rtsp.h>
+// #include <libavformat/rtspcodes.h>
+// #include <libavformat/rtsp.h>
 #include <libswscale/swscale.h>
 }
 
+// usleep
+#include <unistd.h>
 
 using namespace std;
 using namespace cv;
@@ -32,7 +34,7 @@ int main(int argc, char** argv) {
     resizeWindow(WINDOW_NAME1, 640, 480);
 
 
-
+    unsigned int microseconds = 100000;
 
     // Open the initial context variables that are needed
     SwsContext *img_convert_ctx;
@@ -45,16 +47,25 @@ int main(int argc, char** argv) {
     avformat_network_init();
 
     //open RTSP
-    if (avformat_open_input(&format_ctx, "rtsp://192.168.0.123:554/Streaming/Channels/1/?transportmode=unicast",
+    // if (avformat_open_input(&format_ctx, "rtsp://admin:admin123@192.168.0.130:554/Streaming/Channels/1/?transportmode=unicast",
+    //         NULL, NULL) != 0) {
+    //     return EXIT_FAILURE;
+    // }
+    // if (avformat_open_input(&format_ctx, "rtsp://192.168.0.124:554/Streaming/Channels/1/?transportmode=unicast",
+    //         NULL, NULL) != 0) {
+    //     return EXIT_FAILURE;
+    // }
+
+    if (avformat_open_input(&format_ctx, "rtsp://192.168.0.140:8554/live0.264",
             NULL, NULL) != 0) {
         return EXIT_FAILURE;
     }
 
 
-    RTSPState *state = _formatCtx->priv_data;
-    RTSPStream *stream = state->rtsp_streams[0];
-    RTPDemuxContext *demux = stream->transport_priv;
-    demux->timestamp;
+    // RTSPState *state = _formatCtx->priv_data;
+    // RTSPStream *stream = state->rtsp_streams[0];
+    // RTPDemuxContext *demux = stream->transport_priv;
+    // demux->timestamp;
 
 
     if (avformat_find_stream_info(format_ctx, NULL) < 0) {
@@ -115,7 +126,8 @@ int main(int argc, char** argv) {
     avpicture_fill((AVPicture *) picture_rgb, picture_buffer_2, AV_PIX_FMT_RGB24,
             codec_ctx->width, codec_ctx->height);
 
-    while (av_read_frame(format_ctx, &packet) >= 0 && cnt < 30) { //read ~ 1000 frames
+    // while (av_read_frame(format_ctx, &packet) >= 0 && cnt < 30) { //read ~ 1000 frames
+    while (av_read_frame(format_ctx, &packet) >= 0) { //read ~ 1000 frames        
 
         // std::cout << "1 Frame: " << cnt << std::endl;
         if (packet.stream_index == video_stream_index) {    //packet is video
@@ -152,7 +164,11 @@ int main(int argc, char** argv) {
             cnt++;
 
 
-            switch(waitKey(10)) {
+            
+            // usleep(microseconds);
+
+
+            switch(waitKey(1)) {
                 case 27:
                 return 0;
             }

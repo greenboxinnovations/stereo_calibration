@@ -105,7 +105,7 @@ void makeChessVec(std::vector<std::vector<Point2f>> &tempChessVec, std::vector<P
   for (int i = 0; i < corners.size(); ++i){
       
 
-      if(j_count == 13){
+      if(j_count == 9){
         j_count = 0;
         i_count++;
       }
@@ -166,8 +166,8 @@ StereoCalib(const vector<string>& imagelist, Size boardSize, float squareSize, b
                 found = findChessboardCorners(timg, boardSize, corners,
                     CALIB_CB_ADAPTIVE_THRESH | CALIB_CB_NORMALIZE_IMAGE);
 
-                int cols = 13;
-                int rows = 9;
+                int cols = 9;
+                int rows = 6;
 
                 if(isInverted(corners)){
                     cout << "corners are inverted" << endl;
@@ -245,8 +245,10 @@ StereoCalib(const vector<string>& imagelist, Size boardSize, float squareSize, b
 
     Mat cameraMatrix[2], distCoeffs[2];
 
-    FileStorage fsl("left2.yml", FileStorage::READ);
-    FileStorage fsr("right2.yml", FileStorage::READ);
+    // FileStorage fsl("left2.yml", FileStorage::READ);
+    // FileStorage fsr("right2.yml", FileStorage::READ);
+    FileStorage fsl("cc3_140left.yml", FileStorage::READ);
+    FileStorage fsr("cc3_141right.yml", FileStorage::READ);
 
     fsl["camera_matrix"] >> cameraMatrix[0];
     fsr["camera_matrix"] >> cameraMatrix[1];

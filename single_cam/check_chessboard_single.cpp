@@ -62,7 +62,7 @@ void chessboardShow(const vector<string>& imagelist, Size boardSize){
         // resize(cimg, cimg1, Size(), sf, sf, INTER_LINEAR_EXACT);
         // imshow("corners", cimg1);
         imshow(winname1, cimg1);        
-        char c = (char)waitKey(5000);
+        char c = (char)waitKey(1000);
         if( c == 27 || c == 'q' || c == 'Q' ) //Allow ESC to quit
             exit(-1);
     }
@@ -91,7 +91,7 @@ int main(int argc, char** argv)
     }
 
 
-    chessboardShow(imagelist, Size(13,9));
+    chessboardShow(imagelist, Size(9,6));
 
     return 0;
 }

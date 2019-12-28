@@ -16,6 +16,59 @@ using namespace cv;
 
 int x = 0;
 
+
+// for file access
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+#include <boost/algorithm/string.hpp> // include Boost, a C++ library
+
+
+
+void MyLine( Mat img, Point start, Point end )
+{
+  int thickness = 2;
+  int lineType = 8;
+  line( img,
+        start,
+        end,
+        Scalar( 0, 255, 0 ),
+        thickness,
+        lineType );
+}
+
+int nextPhotoIndex(std::string folder){
+
+    int max_int = 0;    
+    int temp_int = 0;
+    try {
+        std::string path = "/home/greenbox-desktop/Desktop/desktop/stereo_calibration/single_cam/"+folder;
+        for (const auto & entry : fs::directory_iterator(path)){
+
+            std::string path_string = entry.path().u8string();
+            boost::replace_all(path_string, path, "");      
+            boost::replace_all(path_string, ".jpg", "");
+            boost::replace_all(path_string, "/", "");
+            boost::replace_all(path_string, "left", "");
+            boost::replace_all(path_string, "right", "");
+            // std::cout << path_string << std::endl;
+            temp_int = std::stoi(path_string);
+
+            if(temp_int >= max_int){
+                max_int = temp_int;
+                max_int++;
+            }           
+        }
+    }catch (...) {}
+
+    if(max_int == 0){
+        max_int = 1;
+    }
+
+    return max_int;
+}
+
+
+
 int main(int argc, char const *argv[])
 {
   string imgs_directory;
@@ -64,6 +117,7 @@ int main(int argc, char const *argv[])
   const string CAM_IP = ip;
 
   VideoCapture cap(CAM_IP);
+  cap.set(cv::CAP_PROP_BUFFERSIZE, 1);
 
   Mat img1, img_res1, img2, img_res2;
   Mat img_chess;
@@ -72,12 +126,23 @@ int main(int argc, char const *argv[])
   while (1) {
     cap >> img1;    
 
-    resize(img1, img_res1, Size(im_width, im_height));    
-    imshow(WINDOW_NAME1, img_res1);    
+    // resize(img1, img_res1, Size(im_width, im_height));    
+    img_res1 = img1.clone();
+    // 1920/4
+    // 0+ans
+    // 1920-ans
+    MyLine( img1, Point( 640, 0 ), Point( 640, im_height) );
+    MyLine( img1, Point( 1280, 0), Point( 1280, im_height) );
+
+    MyLine( img1, Point( 0, 360 ), Point( im_width, 360 ) );
+    MyLine( img1, Point( 0, 720 ), Point( im_width, 720 ) );
+
+
+    imshow(WINDOW_NAME1, img1);    
 
 
 
-    switch(waitKey(30)) {
+    switch(waitKey(1)) {
 
       // escape
       case 27:
@@ -103,7 +168,7 @@ int main(int argc, char const *argv[])
           resizeWindow(CHESSWINDOW, 1280, 960);  
 
           vector<Point2f> corners;
-          Size boardSize = Size(13,9);
+          Size boardSize = Size(9,6);
           Mat img_chess_bgr;
           
           board_found = findChessboardCorners(img_chess, boardSize, corners,
@@ -131,7 +196,11 @@ int main(int argc, char const *argv[])
           destroyWindow(CHESSWINDOW);
 
 
-          x++;
+          // x++;
+
+          x = nextPhotoIndex(imgs_directory.c_str());
+
+
           char filename1[200], filename2[200];
           if(type == "left"){
             sprintf(filename1, "%sleft%d.%s", imgs_directory.c_str(), x, extension.c_str());  
